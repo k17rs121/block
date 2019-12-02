@@ -337,8 +337,8 @@ function init() {
                 break;
         }
     });
-
     requestAnimFrame(animate);
+    ncmbController.init(BB.screenSize);
     
 }
 
