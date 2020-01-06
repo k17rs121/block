@@ -62,7 +62,7 @@ createUser: function() {
         .then(function(user){
             // 登録完了後ログイン
             localStorage.setItem("userName", uuid);
-            alert("ユーザー登録に成功しました！");
+            self.loginWithUUID();
         })
         .catch(function(err){
             // userName が被った場合はエラーが返る
@@ -81,6 +81,49 @@ createUser: function() {
     random)).toString(16);
     }
     return uuid;
+    },
+    loginWithUUID:function(){
+      var self = this;
+      var userName = localStorage.getItem("userName");
+      if(!userName){
+        self.createUser();
+      }else if(!self.currentUser){
+        self.ncmb.User.login(userName,userName)
+        .then(function(user){
+          self.currentUser = user;
+          self.refreshCurrentUser();
+        })
+        .catch(function(err){
+          console.log(err);
+          self.createUser();
+        });
+      }else{
+        self.currentUser = self.ncmb.User.getCurrentUser();
+        self.ncmb.User.login(self.currentUser)
+        .then(function(user){
+          self.currentUser = user;
+          self.refreshCurrentUser();
+        })
+        .catch(function(err){
+          console.log(err);
+          self.ncmb.User.logout();
+          self.createUser = null;
+          self.loginWithUUID();
+        });
+      }
+    },
+    refreshCurrentUser: function(){
+      var self = this;
+      if(!self.currentUser) return;
+
+      self.ncmb.User.fetchByID(self.refreshCurrentUser.get("objectId"))
+            .then(function(user){
+              self.currentUser = user;
+            })
+            .catch(function(err){
+              console.log(err);
+              self.currentUser = null;
+            });
     },
   init:function(screenSize){
     var self = this;

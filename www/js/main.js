@@ -278,6 +278,7 @@ var BB = {
         
         BB.gameState = GAMESTATE_STOP;
         ncmbController.sendScore(BB.score);
+        ncmbController.createUser();
     }
 }
 
@@ -339,7 +340,7 @@ function init() {
     });
     requestAnimFrame(animate);
     ncmbController.init(BB.screenSize);
-    ncmbController.createUser();
+    
     
 }
 
