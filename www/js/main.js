@@ -340,7 +340,6 @@ function init() {
     });
     requestAnimFrame(animate);
     ncmbController.init(BB.screenSize);
-    ons.bootstrap();
     
 }
 
