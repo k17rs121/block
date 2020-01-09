@@ -116,7 +116,7 @@ createUser: function() {
       var self = this;
       if(!self.currentUser) return;
 
-      self.ncmb.User.fetchByID(self.refreshCurrentUser.get("objectId"))
+      self.ncmb.User.fetchByID(self.currentUser.get("objectId"))
             .then(function(user){
               self.currentUser = user;
             })
@@ -125,6 +125,28 @@ createUser: function() {
               self.currentUser = null;
             });
     },
+    showDisplayNameDialog: function() {
+    var self = this;
+
+    $("#mask").show();
+    // ダイアログを左右中央に表示する
+    $("#userEditWrapper").css("top", self.screenSize.height / 2 - 100);
+    $("#userEditWrapper").css("left", self.screenSize.width * 0.1);
+    $("#userEditWrapper").show();
+},
+
+// ユーザー名登録
+updateDisplayName: function(){
+    $("#userEditWrapper").hide();
+    $("#mask").hide();
+
+    // 入力した名前をカレントユーザーにセット
+    var name = $("#name").val();
+    this.currentUser.set("displayName", name);
+
+    // 会員情報の更新
+    return this.currentUser.update();
+},
   init:function(screenSize){
     var self = this;
     self.ncmb = new NCMB(self.APPLICATION_KEY,self.CLIENT_KEY);
